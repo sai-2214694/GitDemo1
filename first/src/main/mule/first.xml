@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="ef31fde3-b961-4479-a967-df4d037fc7dd" >
+		<http:listener-connection host="0.0.0.0" port="8080" />
+	</http:listener-config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="3d1b0c7a-4c94-4105-b1e5-45462a8f48f4" />
+	<file:config name="File_Config1" doc:name="File Config" doc:id="b621973b-56a4-4055-9561-5bfce8035cac" />
+	<flow name="firstFlow" doc:id="843f3690-ad8f-4365-86e9-979bf0b191a5" >
+		<http:listener doc:name="Listener" doc:id="82e3c7bc-b5ae-44e8-91a7-15dcc4aaccc7" config-ref="HTTP_Listener_config" path="/test"/>
+		<file:read doc:name="Read" doc:id="5561c0c6-0775-4ab0-80e0-d4e56899a119" config-ref="File_Config" path="C:\Users\2214694\OneDrive - Cognizant\Desktop\Input_file.txt"/>
+		<foreach doc:name="For Each" doc:id="fc57acc1-5e21-4388-8ad5-0569996813e3">
+			<ee:transform doc:name="Transform Message" doc:id="dfebce57-8d3f-4ff0-ac30-a341d8f35e8a">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+type Mydate = String { format: "dd/MM/uuuu" }
+---
+{
+  a: payload as Mydate
+
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		</foreach>
+		<file:write doc:name="Write" doc:id="6f500c6a-0546-4b7a-b692-67790133c21a" config-ref="File_Config1" path="C:\Users\2214694\OneDrive - Cognizant\Desktop\Output_file.txt">
+			<file:content ><![CDATA[#[%dw 2.0
+output application/json
+---
+payload]]]></file:content>
+		</file:write>
+	</flow>
+</mule>
