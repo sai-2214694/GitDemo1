@@ -34,5 +34,7 @@ output application/json
 ---
 payload]]]></file:content>
 		</file:write>
+		<logger level="INFO" doc:name="Logger" doc:id="80bc4334-f61d-458c-98ba-01ab5eef4db6" />
+		<logger level="INFO" doc:name="Logger" doc:id="50426091-cfbb-4805-89de-8e4a6922d3a3" />
 	</flow>
 </mule>
